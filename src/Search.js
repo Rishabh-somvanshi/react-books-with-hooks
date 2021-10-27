@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const baseUrl = 'https://jsonplaceholder.typicode.com/todos/';
 
@@ -12,23 +12,33 @@ export function searchBooks(query) {
 
 export function Search() {
   const [results, setResults] = React.useState(0);
-
+  const [count, setCount] = useState(0);
   const handleSearch = (event) => {
     searchBooks(event.target.value).then((response) => {
-      //console.log('search', console.log(response.json()));
       setResults(response);
     });
   };
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // Update the document title using the browser API
+    document.title = `You clicked ${count} times`;
+  });
 
   const resultList = (results || []).map((book) => (
     <tr key={book.id}>
       <td>{book.id}</td>
       <td>{book.title}</td>
-      <td>{book.completed}</td>
+      <td>{book.userId}</td>
     </tr>
   ));
+
   return (
     <div>
+      <div>
+        <p>You clicked {count} times</p>
+        <button onClick={() => setCount(count + 1)}>Click me</button>
+      </div>
       <div className="search-input">
         <input onChange={handleSearch} type="text" placeholder="Search" />
       </div>
