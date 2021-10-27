@@ -1,12 +1,13 @@
 import React from 'react';
 
-const baseUrl = 'http://openlibrary.org';
+const baseUrl = 'https://jsonplaceholder.typicode.com/todos/';
 
 export function searchBooks(query) {
-  const url = new URL(baseUrl + '/search.json');
-  url.searchParams.append('title', query);
-  console.log(url);
-  return fetch(url).then((response) => response.json());
+  //const url = new URL(baseUrl + '/search.json');
+  // const url = new URL(baseUrl + '/todos.json');
+  // url.searchParams.append('title', query);
+  // console.log(url);
+  return fetch(baseUrl).then((response) => response.json());
 }
 
 export function Search() {
@@ -14,33 +15,34 @@ export function Search() {
 
   const handleSearch = (event) => {
     searchBooks(event.target.value).then((response) => {
-      setResults(response.docs);
+      //console.log('search', console.log(response.json()));
+      setResults(response);
     });
   };
 
   const resultList = (results || []).map((book) => (
-    <tr key={book.key}>
+    <tr key={book.id}>
+      <td>{book.id}</td>
       <td>{book.title}</td>
-      <td>{book.author_name && book.author_name.join(', ')}</td>
-      <td>{book.first_publish_year}</td>
+      <td>{book.completed}</td>
     </tr>
   ));
   return (
     <div>
       <div className="search-input">
-        <input type="text" placeholder="Search" />
+        <input onChange={handleSearch} type="text" placeholder="Search" />
       </div>
       <h1 className="h1">Search Results</h1>
       <div className="books">
         <table>
           <thead>
             <tr>
-              <th className="title-col">Title</th>
-              <th className="author-col">Author</th>
-              <th className="year-col">Pub Year</th>
+              <th className="author-col">id</th>
+              <th className="year-col">title</th>
+              <th className="year-col">completed</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>{resultList}</tbody>
         </table>
       </div>
     </div>
