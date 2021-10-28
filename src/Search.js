@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const baseUrl = 'https://jsonplaceholder.typicode.com/todos/';
-
+const UserContext = React.createContext();
 export function searchBooks(query) {
   //const url = new URL(baseUrl + '/search.json');
   // const url = new URL(baseUrl + '/todos.json');
@@ -9,11 +9,20 @@ export function searchBooks(query) {
   // console.log(url);
   return fetch(baseUrl).then((response) => response.json());
 }
+//useContext
+const Header = () => {
+  const user = React.useContext(UserContext);
+  return <h1>Welcome, {user.name}!</h1>;
+};
 
 export function Search() {
   const [results, setResults] = React.useState(0);
   const [count, setCount] = useState(0);
+  const inputRef = React.useRef(null);
+  const [user] = React.useState({ name: 'Fred' });
+
   const handleSearch = (event) => {
+    //inputRef.current.focus();
     searchBooks(event.target.value).then((response) => {
       setResults(response);
     });
@@ -39,8 +48,19 @@ export function Search() {
         <p>You clicked {count} times</p>
         <button onClick={() => setCount(count + 1)}>Click me</button>
       </div>
+      {/* 
+      
+       */}
+      <UserContext.Provider value={user}>
+        <Header />
+      </UserContext.Provider>
       <div className="search-input">
-        <input onChange={handleSearch} type="text" placeholder="Search" />
+        <input
+          onChange={handleSearch}
+          ref={inputRef}
+          type="text"
+          placeholder="Search"
+        />
       </div>
       <h1 className="h1">Search Results</h1>
       <div className="books">
